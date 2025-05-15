@@ -14,10 +14,13 @@ import os
 
 
 
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, render_template
+from flask_cors import CORS  # Optional if not calling externally
 import requests
 
 app = Flask(__name__)
+CORS(app)  # Optional
+
 
 def get_top_questions(tag="python"):
     url = "https://api.stackexchange.com/2.3/questions"
@@ -57,8 +60,8 @@ def questions():
     return jsonify(questions)
 
 @app.route("/")
-def index():
-    return "<h1>StackOverflow Top Questions API Running</h1>"
+def home():
+    return render_template("index.html")
 
 if __name__ == "__main__":
     # app.run(host="0.0.0.0", port=8080)
