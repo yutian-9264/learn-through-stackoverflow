@@ -4,6 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Top Questions for {{ tag }}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            document.querySelectorAll("pre code").forEach((block) => {
+                hljs.highlightElement(block);
+            });
+        });
+    </script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -35,6 +44,16 @@
             margin: 10px 0 0;
             color: #555;
         }
+        pre {
+            background-color: #f4f4f4;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: "Courier New", Courier, monospace;
+            font-size: 14px;
+        }
         .back-link {
             display: inline-block;
             margin-top: 20px;
@@ -52,8 +71,10 @@
         {% for question in questions %}
             <li>
                 <strong><a href="{{ question.link }}" target="_blank">{{ question.title }}</a></strong>
-                <p><strong>Question:</strong> {{ question.body | safe }}</p> <!-- Display the full question -->
-                <p><strong>Answer:</strong> {{ question.answer | safe }}</p>
+                <p><strong>Question:</strong></p>
+                <div>{{ question.body | safe }}</div> <!-- Render the question body as HTML -->
+                <p><strong>Answer:</strong></p>
+                <div>{{ question.answer | safe }}</div> <!-- Render the answer body as HTML -->
             </li>
         {% endfor %}
     </ul>
