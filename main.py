@@ -17,6 +17,7 @@ import os
 from flask import Flask, jsonify, request, render_template
 from flask_cors import CORS  # Optional if not calling externally
 import requests
+import markdown  # Import the markdown library
 
 app = Flask(__name__)
 CORS(app)  # Optional
@@ -29,7 +30,7 @@ def get_top_questions(tag="python"):
         "sort": "votes",
         "tagged": tag,
         "site": "stackoverflow",
-        "pagesize": 2,
+        "pagesize": 5,
         "filter": "withbody"  # Use the 'withbody' filter to include the question body
     }
     response = requests.get(url, params=params)
@@ -51,14 +52,27 @@ def get_top_answer(answer_id):
 @app.route("/questions")
 def questions():
     tag = request.args.get("tag", "python")  # Default to 'python' if no tag is provided
+    index = request.args.get("index", 0)  # Default to the first question (index 0)
     questions = get_top_questions(tag)
-    for q in questions:
-        if 'accepted_answer_id' in q:
-            q['answer'] = get_top_answer(q['accepted_answer_id'])
+    
+    index = int(index)
+    if 0 <= index < len(questions):
+        question = questions[index]
+        question['body'] = markdown.markdown(question.get('body', ''))
+        if 'accepted_answer_id' in question:
+            question['answer'] = markdown.markdown(get_top_answer(question['accepted_answer_id']))
         else:
-            q['answer'] = "No accepted answer"
-    # Render the questions.html template with the questions and tag
-    return render_template("questions.html", questions=questions, tag=tag)
+            question['answer'] = "No accepted answer"
+    else:
+        # If the index is invalid, return the first question by default
+        question = questions[0]
+        question['body'] = markdown.markdown(question.get('body', ''))
+        if 'accepted_answer_id' in question:
+            question['answer'] = markdown.markdown(get_top_answer(question['accepted_answer_id']))
+        else:
+            question['answer'] = "No accepted answer"
+
+    return render_template("questions.html", question=question, questions=questions, tag=tag, index=index + 1)
 
 @app.route("/")
 def home():

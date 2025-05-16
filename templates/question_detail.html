@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Question {{ index }} for {{ tag }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        .button {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 5px 10px;
+            background-color: #007BFF;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>Question {{ index }} for {{ tag }}</h1>
+    <p><strong>Question:</strong></p>
+    <div>{{ question.body | safe }}</div>
+    <p><strong>Answer:</strong></p>
+    <div>{{ question.answer | safe }}</div>
+    <a href="/questions?tag={{ tag }}" class="button">Back to All Questions</a>
+</body>
+</html>
