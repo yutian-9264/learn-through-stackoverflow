@@ -1,13 +1,22 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Learn Through StackOverflow</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
 </head>
 <body>
-    <h1>Learn Through StackOverflow</h1>
-    <div id="question-list">Loading...</div>
-    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <h1>Select a Programming Language</h1>
+    <form action="/questions" method="get">
+        <label for="tag">Choose a language:</label>
+        <select name="tag" id="tag">
+            <option value="python">Python</option>
+            <option value="javascript">JavaScript</option>
+            <option value="java">Java</option>
+            <option value="csharp">C#</option>
+            <option value="cpp">C++</option>
+        </select>
+        <button type="submit">OK</button>
+    </form>
 </body>
 </html>

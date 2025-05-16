@@ -29,8 +29,8 @@ def get_top_questions(tag="python"):
         "sort": "votes",
         "tagged": tag,
         "site": "stackoverflow",
-        "pagesize": 10,
-        "filter": "!9_bDDxJY5"
+        "pagesize": 2,
+        "filter": "withbody"  # Use the 'withbody' filter to include the question body
     }
     response = requests.get(url, params=params)
     questions = response.json().get("items", [])
@@ -50,14 +50,15 @@ def get_top_answer(answer_id):
 
 @app.route("/questions")
 def questions():
-    tag = request.args.get("tag", "python")
+    tag = request.args.get("tag", "python")  # Default to 'python' if no tag is provided
     questions = get_top_questions(tag)
     for q in questions:
         if 'accepted_answer_id' in q:
             q['answer'] = get_top_answer(q['accepted_answer_id'])
         else:
             q['answer'] = "No accepted answer"
-    return jsonify(questions)
+    # Render the questions.html template with the questions and tag
+    return render_template("questions.html", questions=questions, tag=tag)
 
 @app.route("/")
 def home():

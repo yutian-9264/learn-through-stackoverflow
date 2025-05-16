@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Top Questions for {{ tag }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        a {
+            text-decoration: none;
+            color: #007BFF;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        p {
+            margin: 10px 0 0;
+            color: #555;
+        }
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            text-decoration: none;
+            color: #007BFF;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <h1>Top Questions for {{ tag }}</h1>
+    <ul>
+        {% for question in questions %}
+            <li>
+                <strong><a href="{{ question.link }}" target="_blank">{{ question.title }}</a></strong>
+                <p><strong>Question:</strong> {{ question.body | safe }}</p> <!-- Display the full question -->
+                <p><strong>Answer:</strong> {{ question.answer | safe }}</p>
+            </li>
+        {% endfor %}
+    </ul>
+    <a href="/" class="back-link">Back to Home</a>
+</body>
+</html>
