@@ -37,17 +37,17 @@ def get_top_questions(tag="python"):
     questions = response.json().get("items", [])
     return questions
 
-def get_top_answer(answer_id):
-    url = f"https://api.stackexchange.com/2.3/answers/{answer_id}"
+def get_top_answer(question_id):
+    url = f"https://api.stackexchange.com/2.3/questions/{question_id}/answers"
     params = {
         "order": "desc",
-        "sort": "votes",
+        "sort": "votes",  # Sort answers by votes
         "site": "stackoverflow",
-        "filter": "withbody"
+        "filter": "withbody"  # Include the body of the answers
     }
     response = requests.get(url, params=params)
     answers = response.json().get("items", [])
-    return answers[0]['body'] if answers else None
+    return answers[0]['body'] if answers else "No answers available"
 
 @app.route("/questions")
 def questions():
@@ -59,18 +59,13 @@ def questions():
     if 0 <= index < len(questions):
         question = questions[index]
         question['body'] = markdown.markdown(question.get('body', ''))
-        if 'accepted_answer_id' in question:
-            question['answer'] = markdown.markdown(get_top_answer(question['accepted_answer_id']))
-        else:
-            question['answer'] = "No accepted answer"
+        # Fetch the most voted answer instead of the accepted answer
+        question['answer'] = markdown.markdown(get_top_answer(question['question_id']))
     else:
         # If the index is invalid, return the first question by default
         question = questions[0]
         question['body'] = markdown.markdown(question.get('body', ''))
-        if 'accepted_answer_id' in question:
-            question['answer'] = markdown.markdown(get_top_answer(question['accepted_answer_id']))
-        else:
-            question['answer'] = "No accepted answer"
+        question['answer'] = markdown.markdown(get_top_answer(question['question_id']))
 
     return render_template("questions.html", question=question, questions=questions, tag=tag, index=index + 1)
 
